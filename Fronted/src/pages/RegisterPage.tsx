@@ -4,7 +4,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { ApiError } from '../api/ApiError';
 import { Alert } from '../components/ui/Alert';
-import type { Role } from '../types/api.types';
 
 interface RegisterValues {
   name: string;
@@ -31,7 +30,6 @@ export function RegisterPage(): ReactNode {
   const navigate = useNavigate();
 
   const [values, setValues] = useState<RegisterValues>(EMPTY_VALUES);
-  const [role, setRole] = useState<Role>('user');
   const [formError, setFormError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
   const [submitting, setSubmitting] = useState<boolean>(false);
@@ -39,10 +37,6 @@ export function RegisterPage(): ReactNode {
   function handleChange(event: ChangeEvent<HTMLInputElement>): void {
     const { name, value } = event.target;
     setValues((current) => ({ ...current, [name]: value }));
-  }
-
-  function handleRoleChange(event: ChangeEvent<HTMLSelectElement>): void {
-    setRole(event.target.value === 'admin' ? 'admin' : 'user');
   }
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>): Promise<void> {
@@ -55,7 +49,6 @@ export function RegisterPage(): ReactNode {
         name: values.name.trim(),
         email: values.email.trim(),
         password: values.password,
-        role,
       });
       navigate('/productos');
     } catch (caught) {
@@ -108,12 +101,6 @@ export function RegisterPage(): ReactNode {
         {fieldErrors.password?.map((msg) => (
           <p key={msg} className="field-error">{msg}</p>
         ))}
-
-        <label htmlFor="role">Tipo de cuenta</label>
-        <select id="role" value={role} onChange={handleRoleChange}>
-          <option value="user">Usuario — comprar y guardar favoritos</option>
-          <option value="admin">Administrador — gestionar categorías</option>
-        </select>
 
         {formError !== null && <Alert tone="error" message={formError} />}
 

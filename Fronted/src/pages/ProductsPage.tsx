@@ -38,7 +38,7 @@ export function ProductsPage(): ReactNode {
   }, [debouncedSearch, setSearchParams]);
 
   const { data, loading, error, refetch } = useFetch(
-    () => productsService.getAll({ search: debouncedSearch, categoryId, page, limit: 9 }),
+    () => productsService.getAll({ search: debouncedSearch, ...(categoryId ? { categoryId } : {}), page, limit: 9 }),
     [debouncedSearch, categoryId, page],
   );
 
